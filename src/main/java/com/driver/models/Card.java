@@ -1,6 +1,9 @@
 package com.driver.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.Data;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -9,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@Data
 public class Card {
 
     @Id
@@ -32,7 +36,7 @@ public class Card {
     @JsonIgnoreProperties("card")
     private List<Book> books;
 
-    public Card(){
+    public Card() {
         this.cardStatus = CardStatus.ACTIVATED;
     }
 }

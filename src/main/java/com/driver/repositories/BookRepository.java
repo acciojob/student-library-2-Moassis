@@ -4,12 +4,13 @@ import com.driver.models.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
+@Repository
 public interface BookRepository extends JpaRepository<Book, Integer> {
-
 
     @Query("select b from Book b where b.available =:availability and b.author in (select a from Author a where a.name =:author_name)")
     List<Book> findBooksByAuthor(String author_name, boolean availability);
@@ -22,7 +23,6 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
     @Query(value = "select * from book b where b.available =:availabilty", nativeQuery = true)
     List<Book> findByAvailability(boolean availabilty);
-
 
     @Modifying
     @Transactional
