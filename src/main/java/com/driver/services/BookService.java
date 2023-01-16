@@ -31,12 +31,23 @@ public class BookService {
         author.setBooksWritten(books);
     }
 
+    // • Get Books: GET /book/ Pass nullable parameters genre, availability, and
+    // author to filter out books For example:
+    // i) If genre=”X ”, availability =
+    // true, and author=null; we require the list of all books which are available
+    // and have genre “X”. Note that these books can be written by any author.
+    // ii)
+    // If genre=”Y”, availability = false, and author=”A”; we require the list of
+    // all books which are written by author “A”, have genre “Y”, and are currently
+    // unavailable. Return success message wrapped in a ResponseEntity object
+    // Controller Name - getBooks
+
     public List<Book> getBooks(String genre, boolean available, String author) {
-        List<Book> books = null; // find the elements of the list by yourself
+        List<Book> books = new ArrayList<>(); // find the elements of the list by yourself
         if (genre != null && available == true && author == null) {
             books = bookRepository2.findBooksByGenre(genre, available);
-        } else if (genre != null && available == false && author == null) {
-            books = bookRepository2.findBooksByAuthor(author, available);
+        } else if (genre != null && available == false && author != null) {
+            books = bookRepository2.findBooksByGenreAuthor(genre, author, available);
         }
         return books;
     }
