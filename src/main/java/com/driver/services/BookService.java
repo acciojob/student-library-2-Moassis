@@ -43,7 +43,7 @@ public class BookService {
     // Controller Name - getBooks
 
     public List<Book> getBooks(String genre, boolean available, String author) {
-        List<Book> books = new ArrayList<>(); // find the elements of the list by yourself
+        List<Book> books = null; // find the elements of the list by yourself
         if (genre != null && available == true && author == null) {
             books = bookRepository2.findBooksByGenre(genre, available);
         } else if (genre != null && available == false && author != null) {
