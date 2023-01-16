@@ -46,7 +46,7 @@ public class BookService {
         List<Book> books = null; // find the elements of the list by yourself
         if (genre != null && available == true && author == null) {
             books = bookRepository2.findBooksByGenre(genre, available);
-        } else if (genre != null && author != null) {
+        } else if (genre != null && available == false && author != null) {
             books = bookRepository2.findBooksByGenreAuthor(genre, author, available);
         } else if (genre == null && author != null) {
             books = bookRepository2.findBooksByAuthor(author, available);
