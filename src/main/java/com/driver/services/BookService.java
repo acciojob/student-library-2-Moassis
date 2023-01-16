@@ -49,9 +49,6 @@ public class BookService {
         } else if (genre != null && available == false && author != null) {
             books = bookRepository2.findBooksByGenreAuthor(genre, author, available);
         }
-        if (books == null) {
-            books = new ArrayList<>();
-        }
         return books;
     }
 }
