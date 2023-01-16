@@ -1,9 +1,6 @@
 package com.driver.services;
 
-import com.driver.Converter.StudentConverter;
-import com.driver.DTO.StudentRequestDto;
 import com.driver.models.Card;
-import com.driver.models.CardStatus;
 import com.driver.models.Student;
 import com.driver.repositories.CardRepository;
 import com.driver.repositories.StudentRepository;
@@ -32,18 +29,13 @@ public class StudentService {
         return student;
     }
 
-    public void createStudent(StudentRequestDto studentRequestDto) {
-        Student student = StudentConverter.convertDtoToEntity(studentRequestDto);
-        int id = student.getId();
-        Card card = new Card();
-        card.setId(id);
-        card.setCardStatus(CardStatus.ACTIVATED);
-        cardRepository3.save(card);
+    public void createStudent(Student student) {
+        Card card = cardService4.createAndReturn(student);
+        student.setCard(card);
         studentRepository4.save(student);
     }
 
-    public void updateStudent(StudentRequestDto studentRequestDto) {
-        Student student = StudentConverter.convertDtoToEntity(studentRequestDto);
+    public void updateStudent(Student student) {
         studentRepository4.updateStudentDetails(student);
     }
 

@@ -1,7 +1,5 @@
 package com.driver.services;
 
-import com.driver.Converter.BookConverter;
-import com.driver.DTO.BookRequestDto;
 import com.driver.models.Author;
 import com.driver.models.Book;
 import com.driver.repositories.AuthorRepository;
@@ -20,9 +18,10 @@ public class BookService {
     @Autowired
     AuthorRepository authorRepository;
 
-    public void createBook(BookRequestDto bookRequestDto) {
-        Book book = BookConverter.convertDtoToEntity(bookRequestDto);
+    public void createBook(Book book) {
         book.setAvailable(true);
+        bookRepository2.save(book);
+
         Author author = book.getAuthor();
         List<Book> books = author.getBooksWritten();
         if (books == null) {
@@ -30,8 +29,6 @@ public class BookService {
         }
         books.add(book);
         author.setBooksWritten(books);
-        bookRepository2.save(book);
-        authorRepository.save(author);
     }
 
     public List<Book> getBooks(String genre, boolean available, String author) {

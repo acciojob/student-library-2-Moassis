@@ -1,6 +1,5 @@
 package com.driver.controller;
 
-import com.driver.DTO.BookRequestDto;
 import com.driver.models.Book;
 import com.driver.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +18,8 @@ public class BookController {
 
     // Write createBook API with required annotations
     @PostMapping
-    public ResponseEntity<String> createBook(@RequestBody BookRequestDto bookRequestDto) {
-        bookService.createBook(bookRequestDto);
+    public ResponseEntity<String> createBook(@RequestBody Book book) {
+        bookService.createBook(book);
         return new ResponseEntity<>("Created", HttpStatus.CREATED);
     }
 
