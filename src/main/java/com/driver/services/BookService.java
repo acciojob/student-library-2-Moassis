@@ -2,6 +2,7 @@ package com.driver.services;
 
 import com.driver.models.Author;
 import com.driver.models.Book;
+import com.driver.models.Genre;
 import com.driver.repositories.AuthorRepository;
 import com.driver.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,11 +46,12 @@ public class BookService {
     public List<Book> getBooks(String genre, boolean available, String author) {
         List<Book> books = null; // find the elements of the list by yourself
 
+        Genre newGenre = Genre.valueOf(genre);
         // books = bookRepository2.findBooksByGenre(genre, available);
-        if (genre != null && available == true && author == null) {
-            books = bookRepository2.findBooksByGenre(genre, available);
-        } else if (genre != null && available == false && author != null) {
-            books = bookRepository2.findBooksByGenreAuthor(genre, author, available);
+        if (newGenre != null && available == true && author == null) {
+            books = bookRepository2.findBooksByGenre(newGenre, available);
+        } else if (newGenre != null && available == false && author != null) {
+            books = bookRepository2.findBooksByGenreAuthor(newGenre, author, available);
         }
         return books;
     }
