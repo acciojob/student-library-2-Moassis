@@ -47,22 +47,31 @@ public class TransactionService {
         if (books.size() > max_allowed_books) {
             return "Book limit has reached for this card";
         }
+        books.add(book);
 
         Transaction newTransaction = new Transaction();
         newTransaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
         newTransaction.setBook(book);
         newTransaction.setCard(card);
         newTransaction.setIssueOperation(true);
+<<<<<<< HEAD
 
         books.add(book);
+=======
+        transactionRepository5.save(newTransaction);
+
+>>>>>>> 72ff9bad6bb18db00b7e8db50ec5dc289fd6bcd8
         List<Transaction> transactions = book.getTransactions();
         if (transactions == null)
             transactions = new ArrayList<>();
         transactions.add(newTransaction);
         book.setAvailable(false);
+<<<<<<< HEAD
 
         transactionRepository5.save(newTransaction);
         bookRepository5.save(book);
+=======
+>>>>>>> 72ff9bad6bb18db00b7e8db50ec5dc289fd6bcd8
 
         int id = newTransaction.getId();
         return String.valueOf(id); // return transactionId instead
