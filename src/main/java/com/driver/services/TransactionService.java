@@ -30,20 +30,6 @@ public class TransactionService {
     public int fine_per_day;
 
     public String issueBook(int cardId, int bookId) throws Exception {
-        // check whether bookId and cardId already exist
-        // conditions required for successful transaction of issue book:
-        // 1. book is present and available
-        // If it fails: throw new Exception("Book is either unavailable or not
-        // present");
-        // 2. card is present and activated
-        // If it fails: throw new Exception("Card is invalid");
-        // 3. number of books issued against the card is strictly less than
-        // max_allowed_books
-        // If it fails: throw new Exception("Book limit has reached for this card");
-        // If the transaction is successful, save the transaction to the list of
-        // transactions and return the id
-
-        // Note that the error message should match exactly in all cases
 
         Book book = bookRepository5.findById(bookId).get();
         if (book == null || book.isAvailable() == false) {
@@ -56,30 +42,36 @@ public class TransactionService {
         }
 
         List<Book> books = card.getBooks();
+        if (books == null)
+            books = new ArrayList<>();
         if (books.size() > max_allowed_books) {
             return "Book limit has reached for this card";
         }
 
         Transaction newTransaction = new Transaction();
         newTransaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
+        newTransaction.setBook(book);
+        newTransaction.setCard(card);
+        newTransaction.setIssueOperation(true);
 
         books.add(book);
-        cardRepository5.save(card);
-
         List<Transaction> transactions = book.getTransactions();
+        if (transactions == null)
+            transactions = new ArrayList<>();
         transactions.add(newTransaction);
-
         book.setAvailable(false);
+
+        transactionRepository5.save(newTransaction);
         bookRepository5.save(book);
 
         int id = newTransaction.getId();
-
         return String.valueOf(id); // return transactionId instead
     }
 
     public Transaction returnBook(int cardId, int bookId) throws Exception {
 
-        List<Transaction> transactions = transactionRepository5.find(cardId, bookId, TransactionStatus.SUCCESSFUL,
+        List<Transaction> transactions = transactionRepository5.find(cardId, bookId,
+                TransactionStatus.SUCCESSFUL,
                 true);
         Transaction transaction = transactions.get(transactions.size() - 1);
 
@@ -113,6 +105,6 @@ public class TransactionService {
 
         transactionRepository5.save(transaction);
         Transaction returnBookTransaction = transaction;
-        return returnBookTransaction; // return the transaction after updating all details
+        return returnBookTransaction; // return the transaction after updating alldetails
     }
 }

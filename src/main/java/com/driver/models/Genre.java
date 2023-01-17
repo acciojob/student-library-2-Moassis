@@ -9,9 +9,5 @@ public enum Genre {
     BOTANY,
     CHEMISTRY,
     MATHEMATICS,
-    PHYSICS, bookRequestDto;
-
-    public Genre getGenre() {
-        return null;
-    }
+    PHYSICS,
 }

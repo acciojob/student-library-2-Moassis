@@ -21,4 +21,10 @@ public class AuthorController {
         return new ResponseEntity<>("Created", HttpStatus.CREATED);
     }
 
+    @GetMapping
+    public ResponseEntity<Author> getAuthorById(@RequestParam int id) {
+        Author author = authorService.getAuthorById(id);
+        return new ResponseEntity<>(author, HttpStatus.CREATED);
+    }
+
 }

@@ -2,6 +2,7 @@ package com.driver.services;
 
 import com.driver.models.Author;
 import com.driver.models.Book;
+import com.driver.models.Genre;
 import com.driver.repositories.AuthorRepository;
 import com.driver.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,6 @@ public class BookService {
 
     public void createBook(Book book) {
         book.setAvailable(true);
-        bookRepository2.save(book);
 
         Author author = book.getAuthor();
         List<Book> books = author.getBooksWritten();
@@ -29,6 +29,7 @@ public class BookService {
         }
         books.add(book);
         author.setBooksWritten(books);
+        bookRepository2.save(book);
     }
 
     // • Get Books: GET /book/ Pass nullable parameters genre, availability, and
@@ -42,8 +43,10 @@ public class BookService {
     // unavailable. Return success message wrapped in a ResponseEntity object
     // Controller Name - getBooks
 
-    public List<Book> getBooks(String genre, boolean available, String author) {
+    public List<Book> getBooks(Genre genre, boolean available, String author) {
         List<Book> books = null; // find the elements of the list by yourself
+
+        // books = bookRepository2.findBooksByGenre(genre, available);
         if (genre != null && available == true && author == null) {
             books = bookRepository2.findBooksByGenre(genre, available);
         } else if (genre != null && available == false && author != null) {

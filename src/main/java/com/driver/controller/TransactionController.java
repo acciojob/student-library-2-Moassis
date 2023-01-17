@@ -16,15 +16,17 @@ public class TransactionController {
 
     // Add required annotations
     @PostMapping("/issueBook")
-    public ResponseEntity<String> issueBook(@RequestParam("cardId") int cardId, @RequestParam("bookId") int bookId)
+    public ResponseEntity<String> issueBook(@RequestParam("cardId") int cardId,
+            @RequestParam("bookId") int bookId)
             throws Exception {
-        transactionService.issueBook(cardId, bookId);
-        return new ResponseEntity<>("transaction completed", HttpStatus.ACCEPTED);
+        String result = transactionService.issueBook(cardId, bookId);
+        return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
     }
 
     // Add required annotations
     @PostMapping("/returnBook")
-    public ResponseEntity<String> returnBook(@RequestParam("cardId") int cardId, @RequestParam("bookId") int bookId)
+    public ResponseEntity<String> returnBook(@RequestParam("cardId") int cardId,
+            @RequestParam("bookId") int bookId)
             throws Exception {
         transactionService.returnBook(cardId, bookId);
         return new ResponseEntity<>("transaction completed", HttpStatus.ACCEPTED);
