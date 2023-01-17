@@ -59,18 +59,19 @@ public class TransactionService {
         if (books.size() > max_allowed_books) {
             return "Book limit has reached for this card";
         }
+        books.add(book);
 
         Transaction newTransaction = new Transaction();
         newTransaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
-
-        books.add(book);
-        cardRepository5.save(card);
+        newTransaction.setBook(book);
+        newTransaction.setCard(card);
+        newTransaction.setIssueOperation(true);
+        transactionRepository5.save(newTransaction);
 
         List<Transaction> transactions = book.getTransactions();
         transactions.add(newTransaction);
 
         book.setAvailable(false);
-        bookRepository5.save(book);
 
         int id = newTransaction.getId();
 
