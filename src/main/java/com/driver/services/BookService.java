@@ -20,13 +20,17 @@ public class BookService {
     AuthorRepository authorRepository;
 
     public void createBook(Book book) {
-        Author author = book.getAuthor();
 
+        // for author repository
+        Author author = book.getAuthor();
         List<Book> books = author.getBooksWritten();
         if (books == null)
             books = new ArrayList<>();
         books.add(book);
         author.setBooksWritten(books);
+
+        // for Book Repository
+        book.setAvailable(true);
         bookRepository2.save(book);
 
     }
