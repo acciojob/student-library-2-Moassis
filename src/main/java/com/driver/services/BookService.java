@@ -6,6 +6,8 @@ import com.driver.repositories.AuthorRepository;
 import com.driver.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,14 +20,14 @@ public class BookService {
     AuthorRepository authorRepository;
 
     public void createBook(Book book) {
-        int id = book.getAuthor().getId();
-        Author author = authorRepository.findById(id).get();
+        Author author = book.getAuthor();
         book.setAuthor(author);
 
-        List<Book> currentBooks = author.getBooksWritten();
-        currentBooks.add(book);
-        author.setBooksWritten(currentBooks);
-
+        List<Book> currentListOfBooks = author.getBooksWritten();
+        if (currentListOfBooks == null)
+            currentListOfBooks = new ArrayList<>();
+        currentListOfBooks.add(book);
+        author.setBooksWritten(currentListOfBooks);
         authorRepository.save(author);
 
     }
