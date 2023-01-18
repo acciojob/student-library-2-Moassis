@@ -1,9 +1,14 @@
 package com.driver.services;
 
+import com.driver.models.Book;
 import com.driver.models.Card;
 import com.driver.models.Student;
 import com.driver.repositories.CardRepository;
 import com.driver.repositories.StudentRepository;
+
+import java.util.List;
+import java.util.ListIterator;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +23,9 @@ public class StudentService {
 
     @Autowired
     CardRepository cardRepository3;
+
+    @Autowired
+    TransactionService transactionService;
 
     public Student getDetailsByEmail(String email) {
         Student student = studentRepository4.findByEmailId(email);
@@ -39,8 +47,18 @@ public class StudentService {
         studentRepository4.updateStudentDetails(student);
     }
 
-    public void deleteStudent(int id) {
+    public void deleteStudent(int id) throws Exception {
         // Delete student and deactivate corresponding card
+        Student student = studentRepository4.findById(id).get();
+        Card card = student.getCard();
+        int cardId = card.getId();
+        List<Book> books = card.getBooks();
+        ListIterator<Book> itr = books.listIterator();
+        while (itr.hasNext()) {
+            Book book = itr.next();
+            int bookId = book.getId();
+            transactionService.returnBook(cardId, bookId);
+        }
         cardService4.deactivateCard(id);
         studentRepository4.deleteCustom(id);
     }
