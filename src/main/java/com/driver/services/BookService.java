@@ -21,14 +21,13 @@ public class BookService {
 
     public void createBook(Book book) {
         Author author = book.getAuthor();
-        book.setAuthor(author);
 
-        List<Book> currentListOfBooks = author.getBooksWritten();
-        if (currentListOfBooks == null)
-            currentListOfBooks = new ArrayList<>();
-        currentListOfBooks.add(book);
-        author.setBooksWritten(currentListOfBooks);
-        authorRepository.save(author);
+        List<Book> books = author.getBooksWritten();
+        if (books == null)
+            books = new ArrayList<>();
+        books.add(book);
+        author.setBooksWritten(books);
+        bookRepository2.save(book);
 
     }
 
