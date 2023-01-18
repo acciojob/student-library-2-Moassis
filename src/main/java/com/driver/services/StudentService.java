@@ -47,7 +47,7 @@ public class StudentService {
         studentRepository4.updateStudentDetails(student);
     }
 
-    public void deleteStudent(int id) throws Exception {
+    public void deleteStudent(int id) {
         // Delete student and deactivate corresponding card
         Student student = studentRepository4.findById(id).get();
         Card card = student.getCard();
@@ -57,7 +57,11 @@ public class StudentService {
         while (itr.hasNext()) {
             Book book = itr.next();
             int bookId = book.getId();
-            transactionService.returnBook(cardId, bookId);
+            try {
+                transactionService.returnBook(cardId, bookId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         cardService4.deactivateCard(id);
         studentRepository4.deleteCustom(id);

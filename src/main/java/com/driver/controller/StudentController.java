@@ -48,7 +48,7 @@ public class StudentController {
 
     // Add required annotations
     @DeleteMapping
-    public ResponseEntity<String> deleteStudent(@RequestParam("id") int id) throws Exception {
+    public ResponseEntity<String> deleteStudent(@RequestParam("id") int id) {
         studentService.deleteStudent(id);
         return new ResponseEntity<>("student is deleted", HttpStatus.ACCEPTED);
     }
