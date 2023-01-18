@@ -31,46 +31,93 @@ public class TransactionService {
 
     public String issueBook(int cardId, int bookId) throws Exception {
 
-        Book book = bookRepository5.findById(bookId).get();
-        if (book == null || book.isAvailable() == false) {
-            return "Book is either unavailable or not present";
-        }
-
         Card card = cardRepository5.findById(cardId).get();
-        if (card == null || card.getCardStatus() != CardStatus.ACTIVATED) {
-            return "Card is invalid";
+        Book book = bookRepository5.findById(bookId).get();
+
+        if (card != null && book != null) {
+            if (book.isAvailable() == true) {
+                if (card.getCardStatus() == CardStatus.ACTIVATED) {
+                    int currentNumberOfBooks = card.getBooks().size();
+                    if (currentNumberOfBooks < max_allowed_books - 1) {
+
+                        // for card repository
+                        List<Book> books = card.getBooks();
+                        books.add(book);
+                        card.setBooks(books);
+
+                        // for transction repository
+                        Transaction transaction = new Transaction();
+                        transaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
+                        transaction.setBook(book);
+                        transaction.setCard(card);
+                        transaction.setIssueOperation(true);
+
+                        // for book repository
+                        List<Transaction> transactions = book.getTransactions();
+                        if (transactions == null)
+                            transactions = new ArrayList<>();
+                        transactions.add(transaction);
+                        book.setTransactions(transactions);
+                        book.setAvailable(false);
+                        book.setCard(card);
+
+                        transactionRepository5.save(transaction);
+
+                        int id = transaction.getId();
+                        return String.valueOf(id);
+
+                    } else
+                        throw new Exception("Book limit has reached for this card");
+                } else {
+                    throw new Exception("Card is invalid");
+                }
+            } else {
+                throw new Exception("Book is either unavailable or not present");
+            }
         }
-
-        List<Book> books = card.getBooks();
-        if (books == null)
-            books = new ArrayList<>();
-        if (books.size() > max_allowed_books) {
-            return "Book limit has reached for this card";
-        }
-
-        books.add(book);
-        card.setBooks(books);
-
-        Transaction newTransaction = new Transaction();
-        newTransaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
-        newTransaction.setBook(book);
-        newTransaction.setCard(card);
-        newTransaction.setIssueOperation(true);
-
-        List<Transaction> transactions = book.getTransactions();
-        if (transactions == null)
-            transactions = new ArrayList<>();
-        transactions.add(newTransaction);
-        book.setTransactions(transactions);
-        book.setAvailable(false);
-        book.setCard(card);
-
-        cardRepository5.save(card);
-        transactionRepository5.save(newTransaction);
-
-        int id = newTransaction.getId();
-        return String.valueOf(id); // return transactionId instead
+        return null;
     }
+
+    // Book book = bookRepository5.findById(bookId).get();
+    // if (book == null || book.isAvailable() == false) {
+    // return "Book is either unavailable or not present";
+    // }
+
+    // Card card = cardRepository5.findById(cardId).get();
+    // if (card == null || card.getCardStatus() != CardStatus.ACTIVATED) {
+    // return "Card is invalid";
+    // }
+
+    // List<Book> books = card.getBooks();
+    // if (books == null)
+    // books = new ArrayList<>();
+    // if (books.size() > max_allowed_books) {
+    // return "Book limit has reached for this card";
+    // }
+
+    // books.add(book);
+    // card.setBooks(books);
+
+    // Transaction newTransaction = new Transaction();
+    // newTransaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
+    // newTransaction.setBook(book);
+    // newTransaction.setCard(card);
+    // newTransaction.setIssueOperation(true);
+
+    // List<Transaction> transactions = book.getTransactions();
+    // if (transactions == null)
+    // transactions = new ArrayList<>();
+    // transactions.add(newTransaction);
+    // book.setTransactions(transactions);
+    // book.setAvailable(false);
+    // book.setCard(card);
+
+    // cardRepository5.save(card);
+    // transactionRepository5.save(newTransaction);
+
+    // int id = newTransaction.getId();
+    // return String.valueOf(id); // return transactionId instead
+    // }
 
     public Transaction returnBook(int cardId, int bookId) throws Exception {
 
@@ -93,10 +140,21 @@ public class TransactionService {
             fine = (int) daysDiff * fine_per_day;
         }
 
+        // for Book Repository
         Book book = bookRepository5.findById(bookId).get();
-        Card card = cardRepository5.findById(cardId).get();
         book.setAvailable(true);
 
+        // for Card Repository
+        Card card = cardRepository5.findById(cardId).get();
+        List<Book> books = card.getBooks();
+        ListIterator<Book> itr = books.listIterator();
+        while (itr.hasNext()) {
+            if (itr.next().equals(book)) {
+                itr.remove();
+            }
+        }
+
+        // For transaction repository
         Transaction returnBookTransaction = new Transaction();
         returnBookTransaction.setBook(book);
         returnBookTransaction.setCard(card);
