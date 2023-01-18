@@ -2,7 +2,6 @@ package com.driver.services;
 
 import com.driver.models.Author;
 import com.driver.models.Book;
-import com.driver.models.Genre;
 import com.driver.repositories.AuthorRepository;
 import com.driver.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,27 +31,20 @@ public class BookService {
         bookRepository2.save(book);
     }
 
-    // • Get Books: GET /book/ Pass nullable parameters genre, availability, and
-    // author to filter out books For example:
-    // i) If genre=”X ”, availability =
-    // true, and author=null; we require the list of all books which are available
-    // and have genre “X”. Note that these books can be written by any author.
-    // ii)
-    // If genre=”Y”, availability = false, and author=”A”; we require the list of
-    // all books which are written by author “A”, have genre “Y”, and are currently
-    // unavailable. Return success message wrapped in a ResponseEntity object
-    // Controller Name - getBooks
-
     public List<Book> getBooks(String genre, boolean available, String author) {
-        List<Book> books = null; // find the elements of the list by yourself
+        List<Book> books = new ArrayList<>(); // find the elements of the list by yourself
+        if (genre == null && author != null)
+            books = bookRepository2.findBooksByAuthor(author, available);
 
-        Genre newGenre = Genre.valueOf(genre);
-        // books = bookRepository2.findBooksByGenre(genre, available);
-        if (newGenre != null && available == true && author == null) {
-            books = bookRepository2.findBooksByGenre(newGenre, available);
-        } else if (newGenre != null && available == false && author != null) {
-            books = bookRepository2.findBooksByGenreAuthor(newGenre, author, available);
-        }
+        else if (genre != null && author == null && available) {
+            books = bookRepository2.findBooksByGenre(genre, available);
+        } else if (genre != null && author != null && !available) {
+            books = bookRepository2.findBooksByGenreAuthor(genre, author, available);
+        } else if (genre != null && author != null && available) {
+            books = bookRepository2.findBooksByGenreAuthor(genre, author, available);
+        } else if (genre == null && author == null && available)
+            books = bookRepository2.findByAvailability(available);
+
         return books;
     }
 }
