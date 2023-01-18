@@ -33,21 +33,23 @@ public class TransactionService {
 
         Book book = bookRepository5.findById(bookId).get();
         if (book == null || book.isAvailable() == false) {
-            return "Book is either unavailable or not present";
+            throw new Exception("Book is either unavailable or not present");
         }
 
         Card card = cardRepository5.findById(cardId).get();
         if (card == null || card.getCardStatus() != CardStatus.ACTIVATED) {
-            return "Card is invalid";
+            throw new Exception("Card is invalid");
         }
 
         List<Book> books = card.getBooks();
         if (books == null)
             books = new ArrayList<>();
         if (books.size() > max_allowed_books) {
-            return "Book limit has reached for this card";
+            throw new Exception("Book limit has reached for this card");
         }
+
         books.add(book);
+        card.setBooks(books);
 
         Transaction newTransaction = new Transaction();
         newTransaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
@@ -55,18 +57,16 @@ public class TransactionService {
         newTransaction.setCard(card);
         newTransaction.setIssueOperation(true);
 
-        books.add(book);
-
-        transactionRepository5.save(newTransaction);
-
         List<Transaction> transactions = book.getTransactions();
         if (transactions == null)
             transactions = new ArrayList<>();
         transactions.add(newTransaction);
+        book.setTransactions(transactions);
         book.setAvailable(false);
+        book.setCard(card);
 
+        cardRepository5.save(card);
         transactionRepository5.save(newTransaction);
-        bookRepository5.save(book);
 
         int id = newTransaction.getId();
         return String.valueOf(id); // return transactionId instead
@@ -86,29 +86,27 @@ public class TransactionService {
         Date transactionDate = transaction.getTransactionDate();
         Date currentDate = new Date();
         long diff = currentDate.getTime() - transactionDate.getTime();
-        long days = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+        long days = TimeUnit.MILLISECONDS.toDays(diff);
+        int fine = 0;
         if (days > getMax_allowed_days) {
             long daysDiff = days - getMax_allowed_days;
-            long fine = daysDiff * fine_per_day;
-            transaction.setFineAmount((int) fine);
+            fine = (int) daysDiff * fine_per_day;
         }
 
-        Book book = transaction.getBook();
+        Book book = bookRepository5.findById(bookId).get();
+        Card card = cardRepository5.findById(cardId).get();
         book.setAvailable(true);
-        bookRepository5.save(book);
 
-        Card card = transaction.getCard();
-        List<Book> books = card.getBooks();
-        ListIterator<Book> itr = books.listIterator();
+        Transaction returnBookTransaction = new Transaction();
+        returnBookTransaction.setBook(book);
+        returnBookTransaction.setCard(card);
+        returnBookTransaction.setFineAmount(fine);
+        returnBookTransaction.setIssueOperation(true);
+        returnBookTransaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
 
-        while (itr.hasNext()) {
-            if (itr.next().equals(book)) {
-                itr.remove();
-            }
-        }
+        transactionRepository5.save(returnBookTransaction);
+        cardRepository5.save(card);
 
-        transactionRepository5.save(transaction);
-        Transaction returnBookTransaction = transaction;
         return returnBookTransaction; // return the transaction after updating alldetails
     }
 }
