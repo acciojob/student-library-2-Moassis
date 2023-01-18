@@ -33,19 +33,19 @@ public class TransactionService {
 
         Book book = bookRepository5.findById(bookId).get();
         if (book == null || book.isAvailable() == false) {
-            throw new Exception("Book is either unavailable or not present");
+            return "Book is either unavailable or not present";
         }
 
         Card card = cardRepository5.findById(cardId).get();
         if (card == null || card.getCardStatus() != CardStatus.ACTIVATED) {
-            throw new Exception("Card is invalid");
+            return "Card is invalid";
         }
 
         List<Book> books = card.getBooks();
         if (books == null)
             books = new ArrayList<>();
         if (books.size() > max_allowed_books) {
-            throw new Exception("Book limit has reached for this card");
+            return "Book limit has reached for this card";
         }
 
         books.add(book);
