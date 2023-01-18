@@ -51,13 +51,11 @@ public class StudentService {
         // Delete student and deactivate corresponding card
         Student student = studentRepository4.findById(id).get();
         Card card = student.getCard();
-        int cardId = card.getId();
         List<Book> books = card.getBooks();
         ListIterator<Book> itr = books.listIterator();
         while (itr.hasNext()) {
             Book book = itr.next();
-            int bookId = book.getId();
-            transactionService.returnBook(cardId, bookId);
+            book.setAvailable(true);
         }
         cardService4.deactivateCard(id);
         studentRepository4.deleteCustom(id);
