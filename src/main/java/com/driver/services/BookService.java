@@ -32,7 +32,7 @@ public class BookService {
     }
 
     public List<Book> getBooks(String genre, boolean available, String author) {
-        List<Book> books = null;
+        List<Book> books = new ArrayList<>();
         if (genre != null && available == true && author == null)
             books = bookRepository2.findBooksByGenre(genre, available);
         else if (genre != null && available == false && author != null)

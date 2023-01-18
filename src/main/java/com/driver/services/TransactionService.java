@@ -75,7 +75,7 @@ public class TransactionService {
         return String.valueOf(id);
     }
 
-    public Transaction returnBook(int cardId, int bookId) throws Exception {
+    public Transaction returnBook(int cardId, int bookId) {
 
         List<Transaction> transactions = transactionRepository5.find(cardId, bookId,
                 TransactionStatus.SUCCESSFUL,

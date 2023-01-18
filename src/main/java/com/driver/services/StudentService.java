@@ -57,11 +57,7 @@ public class StudentService {
         while (itr.hasNext()) {
             Book book = itr.next();
             int bookId = book.getId();
-            try {
-                transactionService.returnBook(cardId, bookId);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            transactionService.returnBook(cardId, bookId);
         }
         cardService4.deactivateCard(id);
         studentRepository4.deleteCustom(id);
