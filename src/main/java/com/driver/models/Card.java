@@ -36,6 +36,10 @@ public class Card {
     @JsonIgnoreProperties("card")
     private List<Book> books;
 
+    @OneToMany(mappedBy = "card", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("card")
+    private List<Transaction> transactions;
+
     public Card() {
         this.cardStatus = CardStatus.ACTIVATED;
     }

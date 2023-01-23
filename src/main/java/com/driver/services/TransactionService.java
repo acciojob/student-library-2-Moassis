@@ -48,10 +48,6 @@ public class TransactionService {
             return "Book limit has reached for this card";
         }
 
-        // for card repository
-        books.add(book);
-        card.setBooks(books);
-
         // for transction repository
         Transaction transaction = new Transaction();
         transaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
@@ -60,16 +56,26 @@ public class TransactionService {
         transaction.setIssueOperation(true);
 
         // for book repository
-        List<Transaction> transactions = book.getTransactions();
-        if (transactions == null)
-            transactions = new ArrayList<>();
-        transactions.add(transaction);
-        book.setTransactions(transactions);
+        List<Transaction> bookTransactions = book.getTransactions();
+        if (bookTransactions == null)
+            bookTransactions = new ArrayList<>();
+        bookTransactions.add(transaction);
+        book.setTransactions(bookTransactions);
         book.setAvailable(false);
         book.setCard(card);
 
+        // for card repository
+        books.add(book);
+        card.setBooks(books);
+        List<Transaction> cardTransactions = card.getTransactions();
+        if (cardTransactions == null) {
+            cardTransactions = new ArrayList<>();
+        }
+        cardTransactions.add(transaction);
+        card.setTransactions(cardTransactions);
+
         // for saving
-        transactionRepository5.save(transaction);
+        cardRepository5.save(card);
 
         int id = transaction.getId();
         return String.valueOf(id);
@@ -97,15 +103,7 @@ public class TransactionService {
         Book book = bookRepository5.findById(bookId).get();
         book.setAvailable(true);
 
-        // for Card Repository
         Card card = cardRepository5.findById(cardId).get();
-        List<Book> books = card.getBooks();
-        ListIterator<Book> itr = books.listIterator();
-        while (itr.hasNext()) {
-            if (itr.next().equals(book)) {
-                itr.remove();
-            }
-        }
 
         // For transaction repository
         Transaction returnBookTransaction = new Transaction();
@@ -115,7 +113,20 @@ public class TransactionService {
         returnBookTransaction.setIssueOperation(true);
         returnBookTransaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
 
-        transactionRepository5.save(returnBookTransaction);
+        // for Card Repository
+        List<Book> books = card.getBooks();
+        ListIterator<Book> itr = books.listIterator();
+        while (itr.hasNext()) {
+            if (itr.next().equals(book)) {
+                itr.remove();
+            }
+        }
+        List<Transaction> cardTransactions = card.getTransactions();
+        cardTransactions.add(returnBookTransaction);
+        card.setTransactions(cardTransactions);
+
+        // for saving in all repositories
+        cardRepository5.save(card);
 
         return returnBookTransaction; // return the transaction after updating alldetails
     }
