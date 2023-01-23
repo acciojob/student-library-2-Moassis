@@ -1,6 +1,5 @@
 package com.driver.services;
 
-import com.driver.models.Card;
 import com.driver.models.Student;
 import com.driver.repositories.CardRepository;
 import com.driver.repositories.StudentRepository;
@@ -33,9 +32,7 @@ public class StudentService {
     }
 
     public void createStudent(Student student) {
-        Card card = cardService4.createAndReturn(student);
-        student.setCard(card);
-        studentRepository4.save(student);
+        cardService4.createAndReturn(student);
     }
 
     public void updateStudent(Student student) {
