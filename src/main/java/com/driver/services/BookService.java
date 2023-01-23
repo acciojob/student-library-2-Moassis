@@ -21,6 +21,9 @@ public class BookService {
 
     public void createBook(Book book) {
 
+        // for Book Repository
+        book.setAvailable(true);
+
         // for author repository
         Author author = book.getAuthor();
         List<Book> books = author.getBooksWritten();
@@ -28,11 +31,7 @@ public class BookService {
             books = new ArrayList<>();
         books.add(book);
         author.setBooksWritten(books);
-
-        // for Book Repository
-        book.setAvailable(true);
-        bookRepository2.save(book);
-
+        authorRepository.save(author);
     }
 
     public List<Book> getBooks(String genre, boolean available, String author) {
