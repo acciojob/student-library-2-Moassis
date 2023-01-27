@@ -65,7 +65,7 @@ public class BookService {
         } else if (genre != null && available == false && author != null) {
             return bookRepository2.findBooksByGenreAuthor(genre, author, available);
         } else {
-            return null;
+            return bookRepository2.findByAvailability(available);
         }
     }
 }
