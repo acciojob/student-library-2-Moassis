@@ -43,20 +43,20 @@ public class TransactionService {
         if (book == null || book.isAvailable() == false) {
             transaction.setTransactionStatus(TransactionStatus.FAILED);
             transactionRepository5.save(transaction);
-            return "Book is either unavailable or not present";
+            throw new Exception("Book is either unavailable or not present");
         }
 
         if (card == null || card.getCardStatus().equals(CardStatus.DEACTIVATED)) {
             transaction.setTransactionStatus(TransactionStatus.FAILED);
             transactionRepository5.save(transaction);
-            return "Card is invalid";
+            throw new Exception("Card is invalid");
         }
 
         List<Book> books = card.getBooks();
         if (books.size() >= max_allowed_books) {
             transaction.setTransactionStatus(TransactionStatus.FAILED);
             transactionRepository5.save(transaction);
-            return "Book limit has reached for this card";
+            throw new Exception("Book limit has reached for this card");
         }
 
         // // for transactional Repository
@@ -82,6 +82,8 @@ public class TransactionService {
         // card.setTransactions(cardTransactions);
         // cardRepository5.save(card);
 
+        transaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
+
         book.setCard(card);
         book.setAvailable(false);
         List<Book> bookList = card.getBooks();
@@ -89,11 +91,7 @@ public class TransactionService {
         card.setBooks(bookList);
 
         cardRepository5.save(card);
-
         bookRepository5.updateBook(book);
-
-        transaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
-
         transactionRepository5.save(transaction);
 
         return transaction.getTransactionId();
@@ -133,20 +131,20 @@ public class TransactionService {
         returnBookTransaction.setIssueOperation(true);
         returnBookTransaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
 
-        // // for Card Repository
-        // List<Book> books = card.getBooks();
-        // ListIterator<Book> itr = books.listIterator();
-        // while (itr.hasNext()) {
-        // if (itr.next().equals(book)) {
-        // itr.remove();
-        // }
-        // }
+        // for Card Repository
+        List<Book> books = card.getBooks();
+        ListIterator<Book> itr = books.listIterator();
+        while (itr.hasNext()) {
+            if (itr.next().equals(book)) {
+                itr.remove();
+            }
+        }
         // List<Transaction> cardTransactions = card.getTransactions();
         // cardTransactions.add(returnBookTransaction);
         // card.setTransactions(cardTransactions);
 
-        // // for saving in all repositories
-        // cardRepository5.save(card);
+        // for saving in all repositories
+        cardRepository5.save(card);
 
         transactionRepository5.save(transaction);
 

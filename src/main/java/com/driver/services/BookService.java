@@ -1,15 +1,10 @@
 package com.driver.services;
 
-import com.driver.models.Author;
 import com.driver.models.Book;
 import com.driver.repositories.AuthorRepository;
 import com.driver.repositories.BookRepository;
-
-import ch.qos.logback.core.joran.conditional.ElseAction;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,44 +19,31 @@ public class BookService {
     public void createBook(Book book) {
         bookRepository2.save(book);
 
-        // for Book Repository
-        book.setAvailable(true);
-        Author author = book.getAuthor();
+        // // for Book Repository
+        // book.setAvailable(true);
+        // Author author = book.getAuthor();
 
-        List<Book> books = author.getBooksWritten();
-        if (books == null)
-            books = new ArrayList<>();
-        books.add(book);
-        author.setBooksWritten(books);
-        authorRepository.save(author);
+        // List<Book> books = author.getBooksWritten();
+        // if (books == null)
+        // books = new ArrayList<>();
+        // books.add(book);
+        // author.setBooksWritten(books);
+        // authorRepository.save(author);
 
     }
 
-    // i) If genre=”X”, availability = true, and author=null;
-    // we require the list of all books which are available and
-    // have genre “X”. Note that these books can be written by any author.
-    // ii) If genre=”Y”, availability = false, and author=”A”;
-    // we require the list of all books which are written by author “A”,
-    // have genre “Y”, and are currently unavailable.
-    // Return success message wrapped in a ResponseEntity object Controller Name -
-    // getBooks
-
     public List<Book> getBooks(String genre, boolean available, String author) {
-        // if (genre != null && author != null) {
-        // return bookRepository2.findBooksByGenreAuthor(genre, author, available);
-        // } else if (genre != null) {
-        // return bookRepository2.findBooksByGenre(genre, available);
-        // } else if (author != null) {
-        // return bookRepository2.findBooksByAuthor(author, available);
-        // } else {
-        // return bookRepository2.findByAvailability(available);
-        // }
-
-        if (genre != null && available == true && author == null) {
-            return bookRepository2.findBooksByGenre(genre, available);
-        } else if (genre != null && available == false && author != null) {
+        // 1 both author and genre are not null
+        if (genre != null && available == true && author != null)
             return bookRepository2.findBooksByGenreAuthor(genre, author, available);
-        } else
-            return null;
+        // 2 genre is null and author is not null
+        else if (author != null)
+            return bookRepository2.findBooksByAuthor(author, available);
+        // 3 author is null and genre is not null
+        else if (genre != null)
+            return bookRepository2.findBooksByGenre(genre, available);
+        // 4 both genre and author are null
+        else
+            return bookRepository2.findByAvailability(available);
     }
 }
