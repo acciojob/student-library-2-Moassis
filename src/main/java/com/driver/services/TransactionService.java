@@ -161,12 +161,8 @@ import com.driver.repositories.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import static com.driver.models.CardStatus.ACTIVATED;
 import static com.driver.models.CardStatus.DEACTIVATED;
 
 @Service
