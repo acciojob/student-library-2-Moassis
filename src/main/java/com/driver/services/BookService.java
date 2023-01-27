@@ -4,6 +4,9 @@ import com.driver.models.Author;
 import com.driver.models.Book;
 import com.driver.repositories.AuthorRepository;
 import com.driver.repositories.BookRepository;
+
+import ch.qos.logback.core.joran.conditional.ElseAction;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -64,8 +67,9 @@ public class BookService {
             return bookRepository2.findBooksByGenre(genre, available);
         } else if (genre != null && available == false && author != null) {
             return bookRepository2.findBooksByGenreAuthor(genre, author, available);
-        } else {
-            return bookRepository2.findByAvailability(available);
-        }
+        } else if (author != null) {
+            return bookRepository2.findBooksByAuthor(author, available);
+        } else
+            return null;
     }
 }
