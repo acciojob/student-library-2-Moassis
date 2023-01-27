@@ -32,28 +32,35 @@ public class TransactionService {
     public String issueBook(int cardId, int bookId) throws Exception {
 
         Book book = bookRepository5.findById(bookId).get();
-        if (book == null || book.isAvailable() == false) {
-            return "Book is either unavailable or not present";
-        }
-
         Card card = cardRepository5.findById(cardId).get();
-        if (card == null || card.getCardStatus() != CardStatus.ACTIVATED) {
-            return "Card is invalid";
-        }
-
-        List<Book> books = card.getBooks();
-        if (books == null)
-            books = new ArrayList<>();
-        if (books.size() > max_allowed_books) {
-            return "Book limit has reached for this card";
-        }
 
         // for transction repository
         Transaction transaction = new Transaction();
-        transaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
         transaction.setBook(book);
         transaction.setCard(card);
         transaction.setIssueOperation(true);
+
+        if (book == null || book.isAvailable() == false) {
+            transaction.setTransactionStatus(TransactionStatus.FAILED);
+            transactionRepository5.save(transaction);
+            throw new Exception("Book is either unavailable or not present");
+        }
+
+        if (card == null || card.getCardStatus() != CardStatus.ACTIVATED) {
+            transaction.setTransactionStatus(TransactionStatus.FAILED);
+            transactionRepository5.save(transaction);
+            throw new Exception("Card is invalid");
+        }
+
+        List<Book> books = card.getBooks();
+        if (books.size() >= max_allowed_books) {
+            transaction.setTransactionStatus(TransactionStatus.FAILED);
+            transactionRepository5.save(transaction);
+            throw new Exception("Book limit has reached for this card");
+        }
+
+        // for transactional Repository
+        transaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
 
         // for book repository
         List<Transaction> bookTransactions = book.getTransactions();
@@ -73,12 +80,9 @@ public class TransactionService {
         }
         cardTransactions.add(transaction);
         card.setTransactions(cardTransactions);
-
-        // for saving
         cardRepository5.save(card);
 
-        int id = transaction.getId();
-        return String.valueOf(id);
+        return transaction.getTransactionId();
     }
 
     public Transaction returnBook(int cardId, int bookId) {
@@ -102,6 +106,7 @@ public class TransactionService {
         // for Book Repository
         Book book = bookRepository5.findById(bookId).get();
         book.setAvailable(true);
+        book.setCard(null);
 
         Card card = cardRepository5.findById(cardId).get();
 
