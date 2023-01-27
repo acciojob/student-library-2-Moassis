@@ -43,20 +43,20 @@ public class TransactionService {
         if (book == null || book.isAvailable() == false) {
             transaction.setTransactionStatus(TransactionStatus.FAILED);
             transactionRepository5.save(transaction);
-            throw new Exception("Book is either unavailable or not present");
+            return "Book is either unavailable or not present";
         }
 
         if (card == null || card.getCardStatus().equals(CardStatus.DEACTIVATED)) {
             transaction.setTransactionStatus(TransactionStatus.FAILED);
             transactionRepository5.save(transaction);
-            throw new Exception("Card is invalid");
+            return "Card is invalid";
         }
 
         List<Book> books = card.getBooks();
         if (books.size() >= max_allowed_books) {
             transaction.setTransactionStatus(TransactionStatus.FAILED);
             transactionRepository5.save(transaction);
-            throw new Exception("Book limit has reached for this card");
+            return "Book limit has reached for this card";
         }
 
         // // for transactional Repository

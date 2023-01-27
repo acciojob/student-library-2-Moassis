@@ -20,8 +20,7 @@ public class TransactionController {
             @RequestParam("bookId") int bookId)
             throws Exception {
         String result = transactionService.issueBook(cardId, bookId);
-        return new ResponseEntity<>("transaction completed, here is your transactionId - " + result,
-                HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(result, HttpStatus.ACCEPTED);
     }
 
     // Add required annotations
