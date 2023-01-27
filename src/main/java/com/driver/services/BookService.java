@@ -25,21 +25,15 @@ public class BookService {
         bookRepository2.save(book);
 
         // for Book Repository
-        // book.setAvailable(true);
-        // Author author = book.getAuthor();
-        // if (author == null) {
-        // bookRepository2.save(book);
-        // }
+        book.setAvailable(true);
+        Author author = book.getAuthor();
 
-        // // for author repository
-        // else {
-        // List<Book> books = author.getBooksWritten();
-        // if (books == null)
-        // books = new ArrayList<>();
-        // books.add(book);
-        // author.setBooksWritten(books);
-        // authorRepository.save(author);
-        // }
+        List<Book> books = author.getBooksWritten();
+        if (books == null)
+            books = new ArrayList<>();
+        books.add(book);
+        author.setBooksWritten(books);
+        authorRepository.save(author);
 
     }
 
@@ -67,8 +61,6 @@ public class BookService {
             return bookRepository2.findBooksByGenre(genre, available);
         } else if (genre != null && available == false && author != null) {
             return bookRepository2.findBooksByGenreAuthor(genre, author, available);
-        } else if (author != null) {
-            return bookRepository2.findBooksByAuthor(author, available);
         } else
             return null;
     }
