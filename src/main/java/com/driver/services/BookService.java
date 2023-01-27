@@ -40,15 +40,32 @@ public class BookService {
 
     }
 
+    // i) If genre=”X”, availability = true, and author=null;
+    // we require the list of all books which are available and
+    // have genre “X”. Note that these books can be written by any author.
+    // ii) If genre=”Y”, availability = false, and author=”A”;
+    // we require the list of all books which are written by author “A”,
+    // have genre “Y”, and are currently unavailable.
+    // Return success message wrapped in a ResponseEntity object Controller Name -
+    // getBooks
+
     public List<Book> getBooks(String genre, boolean available, String author) {
-        if (genre != null && author != null) {
-            return bookRepository2.findBooksByGenreAuthor(genre, author, available);
-        } else if (genre != null) {
+        // if (genre != null && author != null) {
+        // return bookRepository2.findBooksByGenreAuthor(genre, author, available);
+        // } else if (genre != null) {
+        // return bookRepository2.findBooksByGenre(genre, available);
+        // } else if (author != null) {
+        // return bookRepository2.findBooksByAuthor(author, available);
+        // } else {
+        // return bookRepository2.findByAvailability(available);
+        // }
+
+        if (genre != null && available == true && author == null) {
             return bookRepository2.findBooksByGenre(genre, available);
-        } else if (author != null) {
-            return bookRepository2.findBooksByAuthor(author, available);
+        } else if (genre != null && available == false && author != null) {
+            return bookRepository2.findBooksByGenreAuthor(genre, author, available);
         } else {
-            return bookRepository2.findByAvailability(available);
+            return null;
         }
     }
 }
