@@ -19,23 +19,24 @@ public class BookService {
     AuthorRepository authorRepository;
 
     public void createBook(Book book) {
+        bookRepository2.save(book);
 
         // for Book Repository
-        book.setAvailable(true);
-        Author author = book.getAuthor();
-        if (author == null) {
-            bookRepository2.save(book);
-        }
+        // book.setAvailable(true);
+        // Author author = book.getAuthor();
+        // if (author == null) {
+        // bookRepository2.save(book);
+        // }
 
-        // for author repository
-        else {
-            List<Book> books = author.getBooksWritten();
-            if (books == null)
-                books = new ArrayList<>();
-            books.add(book);
-            author.setBooksWritten(books);
-            authorRepository.save(author);
-        }
+        // // for author repository
+        // else {
+        // List<Book> books = author.getBooksWritten();
+        // if (books == null)
+        // books = new ArrayList<>();
+        // books.add(book);
+        // author.setBooksWritten(books);
+        // authorRepository.save(author);
+        // }
 
     }
 
