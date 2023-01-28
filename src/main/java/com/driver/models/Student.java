@@ -7,7 +7,6 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table
 public class Student {
 
     @Id
@@ -21,38 +20,11 @@ public class Student {
 
     private String country;
 
-    public Student() {
-    }
-
     public Student(String emailId, String name, int age, String country) {
         this.emailId = emailId;
         this.name = name;
         this.age = age;
         this.country = country;
-    }
-    // alter table student add foreign key constraint card references Card(id)
-
-    @OneToOne
-    @JoinColumn // join this column to the primary key of Card table
-    @JsonIgnoreProperties("student")
-    private Card card;
-
-    @CreationTimestamp
-    private Date createdOn;
-
-    @UpdateTimestamp
-    private Date updatedOn;
-
-    public Student(int id, String emailId, String name, int age, String country, Card card, Date createdOn,
-            Date updatedOn) {
-        this.id = id;
-        this.emailId = emailId;
-        this.name = name;
-        this.age = age;
-        this.country = country;
-        this.card = card;
-        this.createdOn = createdOn;
-        this.updatedOn = updatedOn;
     }
 
     public int getId() {
@@ -119,6 +91,22 @@ public class Student {
         this.updatedOn = updatedOn;
     }
 
+    public Student() {
+    }
+
+    // alter table student add foreign key constraint card references Card(id)
+
+    @OneToOne
+    @JoinColumn // join this column to the primary key of Card table
+    @JsonIgnoreProperties("student")
+    private Card card;
+
+    @CreationTimestamp
+    private Date createdOn;
+
+    @UpdateTimestamp
+    private Date updatedOn;
+
     @Override
     public String toString() {
         return "Student{" +
@@ -130,6 +118,16 @@ public class Student {
                 ", createdOn=" + createdOn +
                 ", updatedOn=" + updatedOn +
                 '}';
+    }
+
+    public Student(String emailId, String name, int age, String country, Card card, Date createdOn, Date updatedOn) {
+        this.emailId = emailId;
+        this.name = name;
+        this.age = age;
+        this.country = country;
+        this.card = card;
+        this.createdOn = createdOn;
+        this.updatedOn = updatedOn;
     }
 
 }
