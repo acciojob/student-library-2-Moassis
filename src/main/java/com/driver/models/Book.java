@@ -33,6 +33,21 @@ public class Book {
     @JsonIgnoreProperties("book")
     private List<Transaction> transactions;
 
+    public Book() {
+    }
+
+    public Book(String name, Genre genre) {
+        this.name = name;
+        this.genre = genre;
+    }
+
+    public Book(String name, Genre genre, Author author) {
+        this.name = name;
+        this.genre = genre;
+        this.author = author;
+        this.available = true;
+    }
+
     public int getId() {
         return id;
     }
@@ -87,30 +102,5 @@ public class Book {
 
     public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
-    }
-
-    public Book(String name, Genre genre, Author author, Card card, boolean available, List<Transaction> transactions) {
-        this.name = name;
-        this.genre = genre;
-        this.author = author;
-        this.card = card;
-        this.available = available;
-        this.transactions = transactions;
-    }
-
-    public Book(String name, Genre genre, Author author, Card card) {
-        this.name = name;
-        this.genre = genre;
-        this.author = author;
-        this.card = card;
-    }
-
-    public Book(String name, Genre genre, Author author) {
-        this.name = name;
-        this.genre = genre;
-        this.author = author;
-    }
-
-    public Book() {
     }
 }

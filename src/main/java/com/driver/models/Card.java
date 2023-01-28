@@ -95,12 +95,4 @@ public class Card {
     public void setBooks(List<Book> books) {
         this.books = books;
     }
-
-    public List<Transaction> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(List<Transaction> transactions) {
-        this.transactions = transactions;
-    }
 }
