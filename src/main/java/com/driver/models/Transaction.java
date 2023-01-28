@@ -36,21 +36,6 @@ public class Transaction {
     @CreationTimestamp
     private Date transactionDate;
 
-    public Transaction() {
-    }
-
-    public Transaction(int id, String transactionId, Card card, Book book, int fineAmount, boolean isIssueOperation,
-            TransactionStatus transactionStatus, Date transactionDate) {
-        this.id = id;
-        this.transactionId = transactionId;
-        this.card = card;
-        this.book = book;
-        this.fineAmount = fineAmount;
-        this.isIssueOperation = isIssueOperation;
-        this.transactionStatus = transactionStatus;
-        this.transactionDate = transactionDate;
-    }
-
     public int getId() {
         return id;
     }
@@ -95,8 +80,8 @@ public class Transaction {
         return isIssueOperation;
     }
 
-    public void setIssueOperation(boolean issueOperation) {
-        isIssueOperation = issueOperation;
+    public void setIssueOperation(boolean isIssueOperation) {
+        this.isIssueOperation = isIssueOperation;
     }
 
     public TransactionStatus getTransactionStatus() {
@@ -113,5 +98,29 @@ public class Transaction {
 
     public void setTransactionDate(Date transactionDate) {
         this.transactionDate = transactionDate;
+    }
+
+    public Transaction() {
+    }
+
+    public Transaction(int id, String transactionId, Card card, Book book, int fineAmount, boolean isIssueOperation,
+            TransactionStatus transactionStatus, Date transactionDate) {
+        this.id = id;
+        this.transactionId = transactionId;
+        this.card = card;
+        this.book = book;
+        this.fineAmount = fineAmount;
+        this.isIssueOperation = isIssueOperation;
+        this.transactionStatus = transactionStatus;
+        this.transactionDate = transactionDate;
+    }
+
+    public Transaction(Card card, Book book, int fineAmount, boolean isIssueOperation,
+            TransactionStatus transactionStatus) {
+        this.card = card;
+        this.book = book;
+        this.fineAmount = fineAmount;
+        this.isIssueOperation = isIssueOperation;
+        this.transactionStatus = transactionStatus;
     }
 }
