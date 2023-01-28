@@ -12,17 +12,28 @@ public class BookService {
 
     @Autowired
     BookRepository bookRepository2;
+
     @Autowired
     AuthorRepository authorRepository;
-    @Autowired
-    AuthorService authorService;
 
     public void createBook(Book book) {
         bookRepository2.save(book);
+
+        // // for Book Repository
+        // book.setAvailable(true);
+        // Author author = book.getAuthor();
+
+        // List<Book> books = author.getBooksWritten();
+        // if (books == null)
+        // books = new ArrayList<>();
+        // books.add(book);
+        // author.setBooksWritten(books);
+        // authorRepository.save(author);
+
     }
 
     public List<Book> getBooks(String genre, boolean available, String author) {
-        if (genre != null && available == true && author != null)
+        if (genre != null && author != null)
             return bookRepository2.findBooksByGenreAuthor(genre, author, available);
         else if (author != null)
             return bookRepository2.findBooksByAuthor(author, available);
@@ -30,6 +41,5 @@ public class BookService {
             return bookRepository2.findBooksByGenre(genre, available);
         else
             return bookRepository2.findByAvailability(available);
-
     }
 }
