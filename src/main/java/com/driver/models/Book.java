@@ -1,11 +1,6 @@
 package com.driver.models;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -32,7 +27,6 @@ public class Book {
     @JsonIgnoreProperties("books")
     private Card card;
 
-
     @Column(columnDefinition = "TINYINT(1)")
     private boolean available;
 
@@ -52,7 +46,7 @@ public class Book {
         this.name = name;
         this.genre = genre;
         this.author = author;
-        this.available=true;
+        this.available = true;
     }
 
     public int getId() {
@@ -111,4 +105,3 @@ public class Book {
         this.transactions = transactions;
     }
 }
-

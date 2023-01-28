@@ -1,17 +1,13 @@
 package com.driver.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table
-
 public class Student {
 
     @Id
@@ -37,10 +33,9 @@ public class Student {
     // alter table student add foreign key constraint card references Card(id)
 
     @OneToOne
-    @JoinColumn   // join this column to the primary key of Card table
+    @JoinColumn // join this column to the primary key of Card table
     @JsonIgnoreProperties("student")
     private Card card;
-
 
     @CreationTimestamp
     private Date createdOn;
@@ -48,7 +43,8 @@ public class Student {
     @UpdateTimestamp
     private Date updatedOn;
 
-    public Student(int id, String emailId, String name, int age, String country, Card card, Date createdOn, Date updatedOn) {
+    public Student(int id, String emailId, String name, int age, String country, Card card, Date createdOn,
+            Date updatedOn) {
         this.id = id;
         this.emailId = emailId;
         this.name = name;
@@ -135,6 +131,5 @@ public class Student {
                 ", updatedOn=" + updatedOn +
                 '}';
     }
-
 
 }

@@ -1,11 +1,7 @@
 package com.driver.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.UUID;
@@ -45,7 +41,8 @@ public class Transaction {
     public Transaction() {
     }
 
-    public Transaction(int id, String transactionId, Card card, Book book, int fineAmount, boolean isIssueOperation, TransactionStatus transactionStatus, Date transactionDate) {
+    public Transaction(int id, String transactionId, Card card, Book book, int fineAmount, boolean isIssueOperation,
+            TransactionStatus transactionStatus, Date transactionDate) {
         this.id = id;
         this.transactionId = transactionId;
         this.card = card;
@@ -120,4 +117,3 @@ public class Transaction {
         this.transactionDate = transactionDate;
     }
 }
-

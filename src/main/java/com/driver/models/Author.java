@@ -1,16 +1,11 @@
 package com.driver.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table
-
 public class Author {
 
     @Id
@@ -37,7 +32,6 @@ public class Author {
         this.email = email;
         this.age = age;
         this.country = country;
-        this.booksWritten = booksWritten;
     }
 
     public Author(String name, String email, String country) {
@@ -94,4 +88,3 @@ public class Author {
         this.booksWritten = booksWritten;
     }
 }
-
